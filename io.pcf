@@ -1,0 +1,10 @@
+set_io hwclk 35
+
+set_io led_r 40
+set_io led_g 41
+set_io led_b 39
+
+set_io uart_tx 25
+set_io uart_rx 27
+set_io clk_out 28
+
