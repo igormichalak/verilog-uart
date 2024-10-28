@@ -47,14 +47,11 @@ module uart_peripheral(
     reg       tx_sig_transmit;
     reg       tx_sig_done;
 
-    always @(negedge reset) begin
-        tx_data_reg <= 8'h77; // ASCII 'w' (0x77)
-        tx_sig_transmit <= 1'b1;
-        tx_sig_done <= 1'b0;
-    end
-
     always @(posedge clk_9600hz or negedge reset) begin
         if (!reset) begin
+            tx_data_reg <= 8'h77; // ASCII 'w' (0x77)
+            tx_sig_transmit <= 1'b1;
+            tx_sig_done <= 1'b0;
             tx_state <= TX_IDLE;
             bit_counter <= 3'd0;
         end else begin
