@@ -35,10 +35,10 @@ module uart_peripheral(
 
     assign clk_9600hz = clk_state;
 
-    localparam tx_idle  = 2'b00;
-    localparam tx_start = 2'b01;
-    localparam tx_data  = 2'b10;
-    localparam tx_stop  = 2'b11;
+    localparam TX_IDLE  = 2'b00;
+    localparam TX_START = 2'b01;
+    localparam TX_DATA  = 2'b10;
+    localparam TX_STOP  = 2'b11;
 
     reg [1:0] tx_state;
     reg [2:0] bit_counter;
@@ -55,28 +55,28 @@ module uart_peripheral(
 
     always @(posedge clk_9600hz or negedge reset) begin
         if (!reset) begin
-            tx_state <= tx_idle;
+            tx_state <= TX_IDLE;
             bit_counter <= 3'd0;
         end else begin
             case (tx_state)
-                tx_idle : begin
+                TX_IDLE : begin
                     if (tx_sig_transmit && !tx_sig_done) begin
-                        tx_state <= tx_start;
+                        tx_state <= TX_START;
                         bit_counter <= 3'd0;
                     end
                 end
-                tx_start : begin
-                    tx_state <= tx_data;
+                TX_START : begin
+                    tx_state <= TX_DATA;
                 end
-                tx_data : begin
+                TX_DATA : begin
                     if (bit_counter == 3'd7) begin
-                        tx_state <= tx_stop;
+                        tx_state <= TX_STOP;
                     end else begin
                         bit_counter <= bit_counter + 1;
                     end
                 end
-                tx_stop : begin
-                    tx_state <= tx_idle;
+                TX_STOP : begin
+                    tx_state <= TX_IDLE;
                     tx_sig_done <= 1'b1;
                 end
             endcase
@@ -88,16 +88,16 @@ module uart_peripheral(
             uart_tx <= 1'b1;
         end else begin
             case (tx_state)
-                tx_idle : begin
+                TX_IDLE : begin
                     uart_tx <= 1'b1;
                 end
-                tx_start : begin
+                TX_START : begin
                     uart_tx <= 1'b0;
                 end
-                tx_data : begin
+                TX_DATA : begin
                     uart_tx <= tx_data_reg[bit_counter];
                 end
-                tx_stop : begin
+                TX_STOP : begin
                     uart_tx <= 1'b1;
                 end
             endcase
