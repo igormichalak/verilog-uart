@@ -1,0 +1,3 @@
+read_verilog uart_transceiver.v
+read_verilog uart_loop.v
+synth_ice40 -top UART_Loop -json top.json
